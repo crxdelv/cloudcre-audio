@@ -12,8 +12,8 @@ class handler(BaseHTTPRequestHandler):
     except:
       return self.end('400 Bad Request: Invalid Parameter', 400)
     try:
-      video = YouTube('https://youtu.be/' + path)
-      stream = video.streams.filter(only_audio=True)
+      video = YouTube(path)
+      stream = video.streams.filter(only_audio=True).first()
       stream.download(filename='output.mp3', output_path='/tmp/')
       self.send_response(200)
       self.send_header('Content-type', 'audio/mp3')
