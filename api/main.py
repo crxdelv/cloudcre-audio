@@ -17,4 +17,4 @@ class handler(BaseHTTPRequestHandler):
       self.send_header('Access-Control-Allow-Origin', '*')
       self.send_response(500)
       self.end_headers()
-      self.wfile.write(traceback.format_exc.encode('utf-8'))
+      self.wfile.write(traceback.format_exc().encode('utf-8'))
