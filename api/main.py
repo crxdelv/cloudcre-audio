@@ -4,20 +4,13 @@ import traceback
 
 class handler(BaseHTTPRequestHandler):
   def do_GET(self):
-    if len(self.path) < 2:
-      return self.end('400 Bad Request: Incomplete Parameter', 400)
-    path = None
     try:
-      path = self.path.split("/")[1]
-    except:
-      return self.end('400 Bad Request: Invalid Parameter', 400)
-    try:
-      video = YouTube(path)
+      video = YouTube(self.path)
       stream = video.streams.filter(only_audio=True).first()
       stream.download(filename='output.mp3', output_path='/tmp/')
       self.send_response(200)
       self.send_header('Content-type', 'audio/mp3')
-      if self.path.endswith('mp3'):
+      if 'dispose' in self.path:
         self.send_header('Content-disposition', 'attachment')
       self.send_header('Access-Control-Allow-Origin', '*')
       self.end_headers()
