@@ -6,12 +6,12 @@ class handler(BaseHTTPRequestHandler):
     try:
       req = requests.get('https:/' + self.path, stream=True)
       req.raise_for_status()
-      for chunk in req.iter_content(chunk_size=8192):
-        self.wfile.write(chunk)
       self.send_response(200)
       self.send_header('Content-Type', 'audio/mp4')
       self.send_header('Access-Control-Allow-Origin', '*')
       self.send_header('Content-Disposition', 'attachment')
+      for chunk in req.iter_content(chunk_size=8192):
+        self.wfile.write(chunk)
     except:
       self.send_response(500)
       self.send_header('Content-Type', 'text/plain')
