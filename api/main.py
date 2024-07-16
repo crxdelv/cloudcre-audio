@@ -13,10 +13,12 @@ class handler(BaseHTTPRequestHandler):
       return self.end('400 Bad Request: Invalid Parameter', 400)
     try:
       video = YouTube('https://youtu.be/' + path)
-      stream = video.streams.filter(only_audio=True).first()
+      stream = video.streams.filter(only_audio=True)
       stream.download(filename='output.mp3', output_path='/tmp/')
       self.send_response(200)
       self.send_header('Content-type', 'audio/mp3')
+      if self.path.endswith('mp3'):
+        self.send_header('Content-disposition', 'attachment')
       self.send_header('Access-Control-Allow-Origin', '*')
       self.end_headers()
       with open('/tmp/output.mp3', 'rb') as f:
@@ -27,7 +29,7 @@ class handler(BaseHTTPRequestHandler):
         return self.end('400 Bad Request: Invalid Parameter', 400)
       if('unavailable' in str(e)):
         return self.end('404 Not Found: Unavailable', 404)
-      traceback.print_exc()
+      return self.end(traceback.format_exc())
   def end(self, text, status):
     self.send_response(status)
     self.send_header('Content-type', 'text/plain')
