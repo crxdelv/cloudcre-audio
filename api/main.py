@@ -1,25 +1,20 @@
 from http.server import BaseHTTPRequestHandler
-from functools import reduce
-from pytubefix import YouTube
-import traceback
+import traceback, requests
 
 class handler(BaseHTTPRequestHandler):
   def do_GET(self):
     try:
-      yt = YouTube(self.path)
-      streams = yt.streams.filter(only_audio=True)
-      stream = reduce(lambda cur, obj: obj if cur.bitrate > obj.bitrate else cur, streams)
-      stream.download('tmp', 'output', mp3=True)
+      req = requests.get('https:/' + self.path, stream=True)
+      req.raise_for_status()
+      for chunk in req.iter_content(chunk_size=8192):
+        self.wfile.write(chunk)
       self.send_response(200)
       self.send_header('Content-Type', 'audio/mp4')
       self.send_header('Access-Control-Allow-Origin', '*')
-      if 'dispose' in self.path:
-       self.send_header('Content-Disposition', 'attachment')
-      with open('/tmp/output.mp3', 'rb') as f:
-        self.wfile.write(f.read())
+      self.send_header('Content-Disposition', 'attachment')
     except:
       self.send_response(500)
       self.send_header('Content-Type', 'text/plain')
       self.send_header('Access-Control-Allow-Origin', '*')
       self.end_headers()
-      self.wfile.write(traceback.format_exc().encode('utf-8'))
+      self.wfile.write(traceback.format_exc.encode('utf-8'))
