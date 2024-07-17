@@ -4,13 +4,18 @@ import traceback
 
 class handler(BaseHTTPRequestHandler):
   def do_GET(self):
+    dispose = 'dispose' in self.path
+    stream = None
     try:
       video = YouTube(self.path)
-      stream = video.streams.filter(only_audio=True).first()
+      if dispose:
+        stream = video.streams.filter(only_audio=True).first()
+      else:
+        stream = video.streams.filter(only_audio=True).last()
       stream.download(filename='output.mp3', output_path='/tmp/')
       self.send_response(200)
       self.send_header('Content-type', 'audio/mp3')
-      if 'dispose' in self.path:
+      if dispose:
         self.send_header('Content-disposition', 'attachment')
       self.send_header('Access-Control-Allow-Origin', '*')
       self.end_headers()
