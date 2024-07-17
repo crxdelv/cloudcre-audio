@@ -8,10 +8,7 @@ class handler(BaseHTTPRequestHandler):
     stream = None
     try:
       video = YouTube(self.path)
-      if dispose:
-        stream = video.streams.filter(only_audio=True)[3]
-      else:
-        stream = video.streams.filter(only_audio=True)[0]
+      stream = video.streams.filter(only_audio=True).first()
       stream.download(filename='output.mp3', output_path='/tmp/')
       self.send_response(200)
       self.send_header('Content-type', 'audio/mp3')
