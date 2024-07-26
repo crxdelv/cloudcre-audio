@@ -49,7 +49,15 @@ To deploy your own server, fork this repository.
 git clone https://github.com/creuserr/cloudcre-audio.git
 ```
 
-Add some adjustments, and deploy it.
+Add some adjustments, and deploy it to any hosting you want.
+
+To select the highest quality, change the code of line 11 to:
+
+```python
+stream = video.streams.filter(only_audio=True)[1]
+```
+
+If you want the webm format, you can use the method `.last()`. If you do, you should use the `webm` extension when naming the file.
 
 ### Disclaimer :balance_scale:
 
