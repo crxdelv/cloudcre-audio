@@ -1,3 +1,10 @@
+> [!CAUTION]
+> **Unavailable** <br>
+> Due to some internal issues of pytubefix,
+> cloudcre and cloudcre-audio are currently
+> unavailable.
+> Further patching will be performed soon.
+
 ### cloudcre-audio :minidisc:
 
 cloudcre-audio (formerly known as creytm) is an open-source backend REST API of cloudcre for streaming audio files retrieved from YT Music.
