@@ -1,21 +1,13 @@
 from pytubefix import YouTube
-from pytubefix.innertube import _default_clients
 from http.server import BaseHTTPRequestHandler
 import traceback
-
-_default_clients[ "ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
-_default_clients["IOS"]["context"]["client"]["clientVersion"] = "19.08.35"
-_default_clients["ANDROID_EMBED"]["context"]["client"]["clientVersion"] = "19.08.35"
-_default_clients["IOS_EMBED"]["context"]["client"]["clientVersion"] = "19.08.35"
-_default_clients["IOS_MUSIC"]["context"]["client"]["clientVersion"] = "6.41"
-_default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID_CREATOR"]
 
 class handler(BaseHTTPRequestHandler):
   def do_GET(self):
     dispose = 'dispose' in self.path
     stream = None
     try:
-      video = YouTube(self.path)
+      video = YouTube(self.path, use_oauth=True, allow_oauth_cache=True)
       stream = video.streams.filter(only_audio=True).first()
       stream.download(filename='output.mp3', output_path='/tmp/')
       self.send_response(200)
